@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">Calc</string>
+    <string name="app_name">Калькулятор валют</string>
+    <string name="header_EtoR">Текущий курс EUR к RUB</string>
+    <string name="header_RtoE">Текущий курс RUB к EUR</string>
+    <string name="default_input">Введите сумму для перевода</string>
+    <string name="default_cost">00.00</string>
+    <string name="btn_ER">EUR -> RUB</string>
+    <string name="btn_RE">RUB -> EUR</string>
+    <string name="res_h2">Результат:</string>
 </resources>
