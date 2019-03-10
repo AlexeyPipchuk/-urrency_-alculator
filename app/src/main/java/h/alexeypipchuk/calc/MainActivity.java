@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.math.RoundingMode;
@@ -28,32 +29,56 @@ public class MainActivity extends AppCompatActivity {
     Button ER;
     Button RE;
 
+    String error;
+
     DecimalFormat df = new DecimalFormat("#.##");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         df.setRoundingMode(RoundingMode.CEILING);
         RubKef = 0;
         Cost = (TextView)findViewById(R.id.Cost);
         result = (TextView)findViewById(R.id.result);
         input = (EditText)findViewById(R.id.input);
         RE = (Button)findViewById(R.id.btnRE);
+
+        if (savedInstanceState != null) {
+            Cost.setText(savedInstanceState.getString("Cost"));
+            result.setText(savedInstanceState.getString("result"));
+        }
+
         RE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                result.setText(df.format(Double.valueOf(input.getText().toString()) / RubKef));
+                if (error == null)
+                    if (!input.getText().toString().equals(""))
+                        result.setText(df.format(Double.valueOf(input.getText().toString()) / RubKef));
+                    else Toast.makeText(getApplicationContext(), "Введите число", Toast.LENGTH_LONG).show();
+                else result.setText(error);
             }
         });
         ER = (Button)findViewById(R.id.btnER);
         ER.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                result.setText(df.format(Double.valueOf(input.getText().toString()) * RubKef));
+                if (error == null)
+                    if (!input.getText().toString().equals(""))
+                        result.setText(df.format(Double.valueOf(input.getText().toString()) * RubKef));
+                    else Toast.makeText(getApplicationContext(), "Введите число", Toast.LENGTH_LONG).show();
+                else result.setText(error);
             }
         });
         QueryToServer();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("Cost", Cost.getText().toString());
+        savedInstanceState.putString("result", result.getText().toString());
     }
 
     private void QueryToServer()
@@ -76,12 +101,14 @@ public class MainActivity extends AppCompatActivity {
                     Cost.setText(df.format(RubKef));
                 } else {
                     Log.d(LOG_TAG,"response code " + response.code() + " " + response.errorBody());
+                    error = "Некорректный ответ от сервера";
                 }
             }
 
             @Override
             public void onFailure(Call<Answer> call, Throwable t) {
                 Log.d(LOG_TAG,"failure " + t);
+                error = "Нет соединения с сетью";
             }
         });
     }
