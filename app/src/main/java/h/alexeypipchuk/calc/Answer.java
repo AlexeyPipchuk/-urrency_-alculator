@@ -10,7 +10,6 @@ public class Answer {
     public Rates getRates() {
         return rates;
     }
-
     public void setRates(Rates rates) {
         this.rates = rates;
     }
@@ -19,7 +18,7 @@ public class Answer {
 
         public Double getrUB() {
             return rUB;
-        }
+        } // Нам нужно только отношение рубля к евро
 
         public void setrUB(Double rUB) {
             this.rUB = rUB;
